@@ -106,7 +106,7 @@ resource "aws_subnet" "rds3" {
   }
 }
 
-#Subnet Associations
+#Subnet Associations - for load balancer
 resource "aws_route_table_association" "public_a" {
   subnet_id      = "${aws_subnet.public.id}"
   route_table_id = "${aws_route_table.publc.id}"
@@ -120,4 +120,13 @@ resource "aws_route_table_association" "private1_a" {
 resource "aws_route_table_association" "private2_a" {
   subnet_id      = "${aws_subnet.private2.id}"
   route_table_id = "${aws_route_table.public.id}"
+}
+
+resource "aws_db_subnet_group" "rds_subnet_group" {
+  name       = "rds_subnet_group"
+  subnet_ids = ["${aws_subnet.rds1.id}", "${aws_subnet.rds2.id}", "${aws_subnet.rds3.id}"]
+
+  tags {
+    Name = "rds subnet group"
+  }
 }
