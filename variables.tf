@@ -1,3 +1,12 @@
 variable "aws_region" {}
 variable "aws_profile" {}
 variable "vpc_cidr_block" {}
+variable "subnet_public_cidr_block" {}
+variable "subnet_private1_cidr_block" {}
+variable "subnet_private2_cidr_block" {}
+variable "subnet_private3_cidr_block" {}
+variable "subnet_private4_cidr_block" {}
+variable "subnet_private5_cidr_block" {}
+variable "availability_zone_public" {}
+variable "availability_zone_private1" {}
+variable "availability_zone_private2" {}
