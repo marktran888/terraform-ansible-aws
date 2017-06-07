@@ -214,8 +214,8 @@ resource "aws_key_pair" "deployer" {
 
 #IAM
 resource "aws_iam_role_policy" "s3_policy" {
-  name = "s3_access_policy"
-  role = "${aws_iam_role.s3_access.id}"
+  name   = "s3_access_policy"
+  role   = "${aws_iam_role.s3_access.id}"
 
   policy = <<EOF
 {
@@ -234,13 +234,13 @@ EOF
 }
 
 resource "aws_iam_instance_profile" "s3_access" {
-  name  = "s3_access"
+  name = "s3_access"
   role = "${aws_iam_role.s3_access.name}"
 }
 
 resource "aws_iam_role" "s3_access" {
-  name = "s3_access_role"
-  path = "/"
+  name               = "s3_access_role"
+  path               = "/"
 
   assume_role_policy = <<EOF
 {
@@ -257,4 +257,15 @@ resource "aws_iam_role" "s3_access" {
     ]
 }
 EOF
+}
+
+#S3 VPC Endpoint
+resource "aws_vpc_endpoint" "private-s3" {
+  vpc_id          = "${aws_vpc.main.id}"
+  service_name    = "com.amazonaws.${var.aws_region}.s3"
+  route_table_ids = ["${aws_vpc.main.default_route_table_id}", "${aws_route_table.public_r.id}"]
+#  policy          = <<EOF
+#{
+#}
+#EOF
 }
