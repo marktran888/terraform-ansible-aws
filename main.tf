@@ -266,6 +266,25 @@ resource "aws_vpc_endpoint" "private-s3" {
   route_table_ids = ["${aws_vpc.main.default_route_table_id}", "${aws_route_table.public_r.id}"]
 #  policy          = <<EOF
 #{
+#  "Statement": [
+#    {
+#      "Action": "*",
+#      "Effect": "Allow",
+#      "Resource": "*",
+#      "Principal": "*",
+#    }
+#  ]
 #}
 #EOF
+}
+
+#S3 Code Bucket
+resource "aws_s3_bucket" "code" {
+  bucket        = "${var.domain_name}_RANDOMCODE123"
+  acl           = "private"
+  force_destroy = true
+
+  tags {
+    Name = "code bucket"
+  }
 }
