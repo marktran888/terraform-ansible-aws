@@ -10,3 +10,4 @@ variable "subnet_private5_cidr_block" {}
 variable "availability_zone_public" {}
 variable "availability_zone_private1" {}
 variable "availability_zone_private2" {}
+variable "localip" {}

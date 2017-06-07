@@ -41,10 +41,10 @@ resource "aws_default_route_table" "private_r" {
 
 #Subnet
 resource "aws_subnet" "public" {
-  vpc_id     = "${aws_vpc.main.id}"
-  cidr_block = "${var.subnet_public_cidr_block}"
+  vpc_id                  = "${aws_vpc.main.id}"
+  cidr_block              = "${var.subnet_public_cidr_block}"
   map_public_ip_on_launch = true
-  availability_zone = "${var.availability_zone_public}"
+  availability_zone       = "${var.availability_zone_public}"
 
   tags {
     Name = "public"
@@ -52,10 +52,10 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_subnet" "private1" {
-  vpc_id     = "${aws_vpc.main.id}"
-  cidr_block = "${var.subnet_private1_cidr_block}"
+  vpc_id                  = "${aws_vpc.main.id}"
+  cidr_block              = "${var.subnet_private1_cidr_block}"
   map_public_ip_on_launch = false
-  availability_zone = "${var.availability_zone_private1}"
+  availability_zone       = "${var.availability_zone_private1}"
 
   tags {
     Name = "private1"
@@ -63,10 +63,10 @@ resource "aws_subnet" "private1" {
 }
 
 resource "aws_subnet" "private2" {
-  vpc_id     = "${aws_vpc.main.id}"
-  cidr_block = "${var.subnet_private2_cidr_block}"
+  vpc_id                  = "${aws_vpc.main.id}"
+  cidr_block              = "${var.subnet_private2_cidr_block}"
   map_public_ip_on_launch = false
-  availability_zone = "${var.availability_zone_private2}"
+  availability_zone       = "${var.availability_zone_private2}"
 
   tags {
     Name = "private2"
@@ -74,10 +74,10 @@ resource "aws_subnet" "private2" {
 }
 
 resource "aws_subnet" "rds1" {
-  vpc_id     = "${aws_vpc.main.id}"
-  cidr_block = "${var.subnet_private3_cidr_block}"
+  vpc_id                  = "${aws_vpc.main.id}"
+  cidr_block              = "${var.subnet_private3_cidr_block}"
   map_public_ip_on_launch = false
-  availability_zone = "${var.availability_zone_private1}"
+  availability_zone       = "${var.availability_zone_private1}"
 
   tags {
     Name = "rds1"
@@ -85,10 +85,10 @@ resource "aws_subnet" "rds1" {
 }
 
 resource "aws_subnet" "rds2" {
-  vpc_id     = "${aws_vpc.main.id}"
-  cidr_block = "${var.subnet_private4_cidr_block}"
+  vpc_id                  = "${aws_vpc.main.id}"
+  cidr_block              = "${var.subnet_private4_cidr_block}"
   map_public_ip_on_launch = false
-  availability_zone = "${var.availability_zone_private2}"
+  availability_zone       = "${var.availability_zone_private2}"
 
   tags {
     Name = "rds2"
@@ -96,10 +96,10 @@ resource "aws_subnet" "rds2" {
 }
 
 resource "aws_subnet" "rds3" {
-  vpc_id     = "${aws_vpc.main.id}"
-  cidr_block = "${var.subnet_private5_cidr_block}"
+  vpc_id                  = "${aws_vpc.main.id}"
+  cidr_block              = "${var.subnet_private5_cidr_block}"
   map_public_ip_on_launch = false
-  availability_zone = "${var.availability_zone_public}"
+  availability_zone       = "${var.availability_zone_public}"
 
   tags {
     Name = "rds3"
@@ -109,17 +109,17 @@ resource "aws_subnet" "rds3" {
 #Subnet Associations - for load balancer
 resource "aws_route_table_association" "public_a" {
   subnet_id      = "${aws_subnet.public.id}"
-  route_table_id = "${aws_route_table.publc.id}"
+  route_table_id = "${aws_route_table.public_r.id}"
 }
 
 resource "aws_route_table_association" "private1_a" {
   subnet_id      = "${aws_subnet.private1.id}"
-  route_table_id = "${aws_route_table.public.id}"
+  route_table_id = "${aws_route_table.public_r.id}"
 }
 
 resource "aws_route_table_association" "private2_a" {
   subnet_id      = "${aws_subnet.private2.id}"
-  route_table_id = "${aws_route_table.public.id}"
+  route_table_id = "${aws_route_table.public_r.id}"
 }
 
 resource "aws_db_subnet_group" "rds_subnet_group" {
@@ -128,5 +128,66 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
 
   tags {
     Name = "rds subnet group"
+  }
+}
+
+#Security Groups
+resource "aws_security_group" "public" {
+  name        = "public_sg"
+  description = "Used for public and private instances for load balancer access"
+  vpc_id      = "${aws_vpc.main.id}"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${var.localip}"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "private" {
+  name        = "private_sg"
+  description = "Used for private instances"
+  vpc_id      = "${aws_vpc.main.id}"
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["${var.vpc_cidr_block}"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "rds" {
+  name        = "rds_sg"
+  description = "Used for DB instances"
+  vpc_id      = "${aws_vpc.main.id}"
+
+  ingress {
+    from_port       = 3306
+    to_port         = 3306
+    protocol        = "tcp"
+    security_groups = ["${aws_security_group.public.id}", "${aws_security_group.private.id}"]
   }
 }
