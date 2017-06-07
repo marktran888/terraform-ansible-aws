@@ -17,3 +17,4 @@ variable "db_username" {}
 variable "db_password" {}
 variable "key_name" {}
 variable "public_key_path" {}
+variable "domain_name" {}
