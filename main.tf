@@ -191,3 +191,17 @@ resource "aws_security_group" "rds" {
     security_groups = ["${aws_security_group.public.id}", "${aws_security_group.private.id}"]
   }
 }
+
+#Databases
+resource "aws_db_instance" "rds" {
+  allocated_storage      = 10
+  storage_type           = "gp2"
+  engine                 = "mysql"
+  engine_version         = "5.6.17"
+  instance_class         = "${var.db_instance_class}"
+  name                   = "${var.db_name}"
+  username               = "${var.db_username}"
+  password               = "${var.db_password}"
+  db_subnet_group_name   = "${aws_db_subnet_group.rds_subnet_group.name}"
+  vpc_security_group_ids = ["${aws_security_group.rds.id}"]
+}

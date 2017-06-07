@@ -11,3 +11,7 @@ variable "availability_zone_public" {}
 variable "availability_zone_private1" {}
 variable "availability_zone_private2" {}
 variable "localip" {}
+variable "db_instance_class" {}
+variable "db_name" {}
+variable "db_username" {}
+variable "db_password" {}
