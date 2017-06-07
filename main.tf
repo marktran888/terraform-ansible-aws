@@ -109,17 +109,17 @@ resource "aws_subnet" "rds3" {
 #Subnet Associations - for load balancer
 resource "aws_route_table_association" "public_a" {
   subnet_id      = "${aws_subnet.public.id}"
-  route_table_id = "${aws_route_table.publc.id}"
+  route_table_id = "${aws_route_table.public_r.id}"
 }
 
 resource "aws_route_table_association" "private1_a" {
   subnet_id      = "${aws_subnet.private1.id}"
-  route_table_id = "${aws_route_table.public.id}"
+  route_table_id = "${aws_route_table.public_r.id}"
 }
 
 resource "aws_route_table_association" "private2_a" {
   subnet_id      = "${aws_subnet.private2.id}"
-  route_table_id = "${aws_route_table.public.id}"
+  route_table_id = "${aws_route_table.public_r.id}"
 }
 
 resource "aws_db_subnet_group" "rds_subnet_group" {
@@ -128,5 +128,18 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
 
   tags {
     Name = "rds subnet group"
+  }
+}
+
+#Security Groups
+resource "aws_security_group" "public" {
+  name        = "public_sg"
+  description = "Used for public and private instances for load balancer access"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${var.localip}"]
   }
 }
