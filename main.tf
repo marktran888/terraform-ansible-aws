@@ -205,3 +205,9 @@ resource "aws_db_instance" "rds" {
   db_subnet_group_name   = "${aws_db_subnet_group.rds_subnet_group.name}"
   vpc_security_group_ids = ["${aws_security_group.rds.id}"]
 }
+
+#Key Pair
+resource "aws_key_pair" "deployer" {
+  key_name   = "${var.key_name}"
+  public_key = "${file(var.public_key_path)}"
+}
