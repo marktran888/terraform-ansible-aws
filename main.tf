@@ -41,10 +41,10 @@ resource "aws_default_route_table" "private_r" {
 
 #Subnet
 resource "aws_subnet" "public" {
-  vpc_id     = "${aws_vpc.main.id}"
-  cidr_block = "${var.subnet_public_cidr_block}"
+  vpc_id                  = "${aws_vpc.main.id}"
+  cidr_block              = "${var.subnet_public_cidr_block}"
   map_public_ip_on_launch = true
-  availability_zone = "${var.availability_zone_public}"
+  availability_zone       = "${var.availability_zone_public}"
 
   tags {
     Name = "public"
@@ -52,10 +52,10 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_subnet" "private1" {
-  vpc_id     = "${aws_vpc.main.id}"
-  cidr_block = "${var.subnet_private1_cidr_block}"
+  vpc_id                  = "${aws_vpc.main.id}"
+  cidr_block              = "${var.subnet_private1_cidr_block}"
   map_public_ip_on_launch = false
-  availability_zone = "${var.availability_zone_private1}"
+  availability_zone       = "${var.availability_zone_private1}"
 
   tags {
     Name = "private1"
@@ -63,10 +63,10 @@ resource "aws_subnet" "private1" {
 }
 
 resource "aws_subnet" "private2" {
-  vpc_id     = "${aws_vpc.main.id}"
-  cidr_block = "${var.subnet_private2_cidr_block}"
+  vpc_id                  = "${aws_vpc.main.id}"
+  cidr_block              = "${var.subnet_private2_cidr_block}"
   map_public_ip_on_launch = false
-  availability_zone = "${var.availability_zone_private2}"
+  availability_zone       = "${var.availability_zone_private2}"
 
   tags {
     Name = "private2"
@@ -74,10 +74,10 @@ resource "aws_subnet" "private2" {
 }
 
 resource "aws_subnet" "rds1" {
-  vpc_id     = "${aws_vpc.main.id}"
-  cidr_block = "${var.subnet_private3_cidr_block}"
+  vpc_id                  = "${aws_vpc.main.id}"
+  cidr_block              = "${var.subnet_private3_cidr_block}"
   map_public_ip_on_launch = false
-  availability_zone = "${var.availability_zone_private1}"
+  availability_zone       = "${var.availability_zone_private1}"
 
   tags {
     Name = "rds1"
@@ -85,10 +85,10 @@ resource "aws_subnet" "rds1" {
 }
 
 resource "aws_subnet" "rds2" {
-  vpc_id     = "${aws_vpc.main.id}"
-  cidr_block = "${var.subnet_private4_cidr_block}"
+  vpc_id                  = "${aws_vpc.main.id}"
+  cidr_block              = "${var.subnet_private4_cidr_block}"
   map_public_ip_on_launch = false
-  availability_zone = "${var.availability_zone_private2}"
+  availability_zone       = "${var.availability_zone_private2}"
 
   tags {
     Name = "rds2"
@@ -96,10 +96,10 @@ resource "aws_subnet" "rds2" {
 }
 
 resource "aws_subnet" "rds3" {
-  vpc_id     = "${aws_vpc.main.id}"
-  cidr_block = "${var.subnet_private5_cidr_block}"
+  vpc_id                  = "${aws_vpc.main.id}"
+  cidr_block              = "${var.subnet_private5_cidr_block}"
   map_public_ip_on_launch = false
-  availability_zone = "${var.availability_zone_public}"
+  availability_zone       = "${var.availability_zone_public}"
 
   tags {
     Name = "rds3"
