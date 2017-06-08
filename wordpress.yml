@@ -1,0 +1,24 @@
+--- # Playbook to configure wordpress server
+- hosts: dev
+  become: yes
+  remote_user: ec2-user
+  tasks:
+    - name: apache
+      yum: name={{ item }} state=present
+      with_items:
+      - httpd
+      - php
+      - php-mysql
+    - name: download
+      get_url: url=http://wordpress.org/latest.tar.gz dest=/var/www/html/wordpress.tar.gz force=yes
+    - name: tar
+      command: "tar xzf /var/www/html/wordpress.tar.gz -C /var/www/html --strip-components 1"
+    - name: update file permissions
+      file:
+        path: /var/www/html/
+        mode: u=rwX,g=rX,o=rX
+        recurse: yes
+        owner: apache
+        group: apache
+    - name: service
+      service: name=httpd state=started enabled=yes
