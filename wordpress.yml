@@ -1,8 +1,12 @@
 --- # Playbook to configure wordpress server
 - hosts: dev
-  become: yes
+  become: true
   remote_user: ec2-user
   tasks:
+    - name: whoami
+      command: "whoami"
+      register: whoami
+    - debug: var=whoami
     - name: apache
       yum: name={{ item }} state=present
       with_items:
